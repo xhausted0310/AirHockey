@@ -25,6 +25,7 @@ public class AIScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         startPos = rb.position;
+        //startPos = new Vector2(0,0);
 
         playerBoundary = new Boundary(playerBoundaryHolder.GetChild(0).position.y,
                                       playerBoundaryHolder.GetChild(1).position.y,
@@ -39,8 +40,6 @@ public class AIScript : MonoBehaviour
     {
         if (!PuckScript.WasGoal)
         {
-
-
             float movementSpeed;
 
             if (Puck.position.y < puckBoundary.down)

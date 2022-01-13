@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    bool canMove;
-    bool wasJustClicked = true;
+    //bool canMove;
+    //bool wasJustClicked = true;
 
     Rigidbody2D rb;
     Vector2 startPosition;
@@ -13,13 +13,15 @@ public class PlayerMovement : MonoBehaviour
     public Transform BoundaryHolder;
     Boundary playerBoundary;
 
-    Collider2D playerCollider;
+   public Collider2D PlayerCollider { get; private set; }
+   public PlayerController controller;
+    public int? LockedfingerID { get; set; } 
 
     
 
     void Start()
     {
-        playerCollider = GetComponent<Collider2D>();
+        PlayerCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         startPosition = rb.position;
 
@@ -30,34 +32,49 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void Update()
+    //void Update()
+    //{
+    //    if (Input.GetMouseButton(0))
+    //    {
+    //        Vector2 mosePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //        if (wasJustClicked)
+    //        {
+    //            wasJustClicked = false;
+    //            if(playerCollider.OverlapPoint(mosePos))
+    //            {
+    //                canMove = true;
+    //            }
+    //            else
+    //            {
+    //                canMove = false;
+    //            }
+    //        }
+    //        if (canMove)
+    //        {
+    //            Vector2 clampedMousePos = new Vector2(Mathf.Clamp(mosePos.x, playerBoundary.left,playerBoundary.right),
+    //                                                  Mathf.Clamp(mosePos.y, playerBoundary.down, playerBoundary.up));
+    //            rb.MovePosition(clampedMousePos);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        wasJustClicked = true;
+    //    }
+    //}
+
+    private void OnEnable()
     {
-        if (Input.GetMouseButton(0))
-        {
-            Vector2 mosePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (wasJustClicked)
-            {
-                wasJustClicked = false;
-                if(playerCollider.OverlapPoint(mosePos))
-                {
-                    canMove = true;
-                }
-                else
-                {
-                    canMove = false;
-                }
-            }
-            if (canMove)
-            {
-                Vector2 clampedMousePos = new Vector2(Mathf.Clamp(mosePos.x, playerBoundary.left,playerBoundary.right),
-                                                      Mathf.Clamp(mosePos.y, playerBoundary.down, playerBoundary.up));
-                rb.MovePosition(clampedMousePos);
-            }
-        }
-        else
-        {
-            wasJustClicked = true;
-        }
+        controller.Players.Add(this);
+    }
+    private void OnDisable()
+    {
+        controller.Players.Remove(this);
+    }
+    public void MoveToPosition(Vector2 position)
+    {
+        Vector2 clampedMousePos = new Vector2(Mathf.Clamp(position.x, playerBoundary.left, playerBoundary.right),
+                                                      Mathf.Clamp(position.y, playerBoundary.down, playerBoundary.up));
+        rb.MovePosition(clampedMousePos);
     }
     public void ResetPosition()
     {
